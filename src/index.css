@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Mesmo esquema de 2 temas do protótipo: os componentes usam
+  var(--color-primary) / var(--color-secondary) / var(--color-tertiary).
+  O ThemeProvider (src/context) troca essas variáveis no <html> ou <body>
+  de acordo com o tema salvo em store_settings.tema.
+*/
+:root {
+  --color-primary: #121216;
+  --color-secondary: #f2efe9;
+  --color-tertiary: #1c1c21;
+}
+
+[data-theme="light"] {
+  --color-primary: #f1f1f3;
+  --color-secondary: #18181b;
+  --color-tertiary: #ffffff;
+}
+
+body {
+  background: var(--color-primary);
+  color: var(--color-secondary);
+  font-family: "Inter", sans-serif;
+}

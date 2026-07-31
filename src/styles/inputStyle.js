@@ -1,0 +1,1 @@
+export default function inputStyle({CARD_2="#23232A",BORDER="#333",TEXT="#FFF"}={}){return{width:"100%",background:CARD_2,border:`1px solid ${BORDER}`,borderRadius:10,padding:"11px 12px",color:TEXT,outline:"none",boxSizing:"border-box"};}
