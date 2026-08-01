@@ -1,46 +1,252 @@
 import React from "react";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { COLORS } from "../constants/theme";
+import Header from "../components/common/Header";
 
-// Este é o ponto de partida da tela inicial (dashboard + 5 opções do protótipo).
-// Continue migrando o JSX do protótipo (troos-estoque-app.jsx) para cá,
-// trocando os "useState" de dados mock por chamadas ao Supabase
-// (ver src/lib/supabaseClient.js). Sugestão: um hook por entidade,
-// ex. src/hooks/useProducts.js, useClients.js, useOrders.js etc.
+
+import MenuCard from "../components/common/MenuCard";
+
+import {
+
+    Package,
+
+    ClipboardList,
+
+    ShoppingCart,
+
+    Users,
+
+    PlusCircle
+
+} from "lucide-react";
+
 export default function Home() {
-  const { profile, isAdmin, signOut } = useAuth();
-  const navigate = useNavigate();
 
-  return (
-    <div className="min-h-screen bg-primary text-secondary p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <p className="text-xs text-secondary/60">Olá,</p>
-          <p className="font-display font-semibold text-lg">{profile?.nome}</p>
+    const navigate = useNavigate();
+
+    const { profile, signOut } = useAuth();
+
+    return (
+
+        <div
+            style={{
+                background: COLORS.BACKGROUND,
+                minHeight:"100vh",
+                color: COLORS.TEXT,
+                padding:30
+            }}
+        >
+
+            <div
+                style={{
+                    display:"flex",
+                    justifyContent:"space-between",
+                    alignItems:"flex-start",
+                    marginBottom:30
+                }}
+            >
+
+                <div>
+
+                    <div
+                        style={{
+                            fontSize:14,
+                            color:COLORS.TEXT_SECONDARY
+                        }}
+                    >
+
+                        Bem Vindo
+
+                    </div>
+
+                    <div
+                        style={{
+                            fontSize:30,
+                            fontWeight:700,
+                            color:COLORS.TEXT
+                        }}
+                    >
+
+                        {profile?.nome}
+
+                    </div>
+
+                </div>
+
+                <button
+                    onClick={signOut}
+                    style={{
+                        background:"transparent",
+                        color:COLORS.TEXT,
+                        border:`1px solid ${COLORS.BORDER}`,
+                        padding:"10px 18px",
+                        borderRadius:10,
+                        cursor:"pointer",
+                        fontWeight:600
+                    }}
+                >
+
+                    SAIR
+
+                </button>
+
+            </div>
+
+            <div
+                style={{
+                    display:"flex",
+                    gap:8,
+                    marginBottom:20
+                }}
+            >
+
+                <div
+                    style={{
+                        flex:1,
+                        background:"#171A21",
+                        padding:12,
+                        borderRadius:10
+                    }}
+                >
+
+                    <div
+                        style={{
+                            fontSize:10,
+                            color:"#999"
+                        }}
+                    >
+
+                        Produtos
+
+                    </div>
+
+                    <div
+                        style={{
+                            fontSize:22,
+                            fontWeight:700
+                        }}
+                    >
+
+                        0
+
+                    </div>
+
+                </div>
+
+                <div
+                    style={{
+                        flex:1,
+                        background:"#171A21",
+                        padding:12,
+                        borderRadius:10
+                    }}
+                >
+
+                    <div
+                        style={{
+                            fontSize:10,
+                            color:"#999"
+                        }}
+                    >
+
+                        Estoque
+
+                    </div>
+
+                    <div
+                        style={{
+                            fontSize:22,
+                            fontWeight:700
+                        }}
+                    >
+
+                        0
+
+                    </div>
+
+                </div>
+
+                <div
+                    style={{
+                        flex:1,
+                        background:"#171A21",
+                        padding:12,
+                        borderRadius:10
+                    }}
+                >
+
+                    <div
+                        style={{
+                            fontSize:10,
+                            color:"#999"
+                        }}
+                    >
+
+                        Baixo
+
+                    </div>
+
+                    <div
+                        style={{
+                            fontSize:22,
+                            fontWeight:700,
+                            color:"#E2A33D"
+                        }}
+                    >
+
+                        0
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div
+                style={{
+                    display:"grid",
+                    gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))",
+                    gap:18,
+                }}
+            >
+
+                <MenuCard
+                    title="Cadastrar Produtos"
+                    subtitle="Novo item no catálogo"
+                    icon={<PlusCircle size={22}/>}
+                    onClick={()=>navigate("/produtos")}
+                />
+
+                <MenuCard
+                    title="Consultar Estoque"
+                    subtitle="Visualizar estoque"
+                    icon={<Package size={22}/>}
+                    onClick={()=>navigate("/estoque")}
+                />
+
+                <MenuCard
+                    title="Entrada no Estoque"
+                    subtitle="Receber mercadorias"
+                    icon={<ClipboardList size={22}/>}
+                />
+
+                <MenuCard
+                    title="Pedidos de Venda"
+                    subtitle="Registrar vendas"
+                    icon={<ShoppingCart size={22}/>}
+                />
+
+                <MenuCard
+                    title="Clientes"
+                    subtitle="Cadastro de clientes"
+                    icon={<Users size={22}/>}
+                />
+
+            </div>
+
         </div>
-        <button
-          onClick={signOut}
-          className="text-xs font-semibold uppercase tracking-wide border border-white/10 rounded-lg px-3 py-2"
-        >
-          Sair
-        </button>
-      </div>
 
-      <div className="bg-tertiary border border-white/10 rounded-xl p-4">
-        <p className="text-sm text-secondary/70">
-        </p>
-        <button
-          onClick={() => navigate("/produtos")}
-        >
-          Cadastrar Produtos
-        </button>
-        {isAdmin && (
-          <p className="text-xs text-secondary/50 mt-2">
-            Você está logado como administrador — Inventário, Vendas do mês, Agenda,
-            Usuários e Editar loja ficam liberados.
-          </p>
-        )}
-      </div>
-    </div>
-  );
+    );
+
 }

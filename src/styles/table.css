@@ -1,0 +1,143 @@
+/* ===========================
+   TABELAS DO SISTEMA
+=========================== */
+
+.data-table-container{
+
+    background:#171A21;
+
+    border:1px solid #2D3445;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+
+}
+
+.data-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    color:white;
+
+}
+
+.data-table thead{
+
+    background:#1F2430;
+
+}
+
+.data-table th{
+
+    padding:16px 18px;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    letter-spacing:.3px;
+
+    border-bottom:1px solid #2D3445;
+
+    white-space:nowrap;
+
+}
+
+.data-table td{
+
+    padding:14px 18px;
+
+    border-bottom:1px solid #2D3445;
+
+    font-size:14px;
+
+}
+
+.data-table tbody tr{
+
+    transition:.18s;
+
+}
+
+.data-table tbody tr:hover{
+
+    background:#202632;
+
+}
+
+.data-table tbody tr:nth-child(even){
+
+    background:#181C25;
+
+}
+
+.data-table tbody tr:last-child td{
+
+    border-bottom:none;
+
+}
+
+.table-actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.table-icon-button{
+
+    width:34px;
+
+    height:34px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:transparent;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.18s;
+
+}
+
+.table-icon-button:hover{
+
+    background:#2B3240;
+
+}
+
+.table-icon-button.delete:hover{
+
+    background:#5D2327;
+
+    color:#FFB2B6;
+
+}
+
+.table-empty{
+
+    padding:50px;
+
+    text-align:center;
+
+    color:#9CA3AF;
+
+    font-size:15px;
+
+}

@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 /*
   Mesmo esquema de 2 temas do protótipo: os componentes usam
   var(--color-primary) / var(--color-secondary) / var(--color-tertiary).
@@ -24,4 +23,44 @@ body {
   background: var(--color-primary);
   color: var(--color-secondary);
   font-family: "Inter", sans-serif;
+}
+
+.menu-item{
+display:flex;
+align-items:center;
+gap:10px;
+width:100%;
+padding:12px;
+background:none;
+border:none;
+cursor:pointer;
+color:white;
+border-bottom:1px solid #2D3445;
+}
+
+.menu-item:hover{
+background:#20232d;
+}
+.menu-item.danger{
+color:#F0797F;
+}
+
+.menu-item:last-child{
+border-bottom:none;
+}
+
+.app-btn-primary{
+width:100%;
+height:44px;
+border:none;
+border-radius:10px;
+background:#C62828;
+color:white;
+font-weight:600;
+cursor:pointer;
+transition:.2s;
+
+}
+.app-btn-primary:hover{
+background:#B71C1C;
 }

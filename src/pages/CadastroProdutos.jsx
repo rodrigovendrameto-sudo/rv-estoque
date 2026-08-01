@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { criarProduto } from "../services/productsService";
+import { useNavigate } from "react-router-dom";
+import Header from "../components/common/Header";
+import Label from "../components/ui/Label";
+import inputStyle from "../styles/inputStyle";
 
 const TIPOS = [
   "Suplemento",
@@ -13,6 +17,7 @@ export default function CadastroProdutos() {
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [tipo, setTipo] = useState(TIPOS[0]);
+  const navigate = useNavigate();
 
   async function cadastrarProduto() {
     if (!code.trim() || !name.trim()) {
@@ -40,53 +45,101 @@ export default function CadastroProdutos() {
     }
   }
 
-  return (
-    <div style={{ padding: 30, maxWidth: 500 }}>
-
-      <h2>Cadastrar Produto</h2>
-
-      <div style={{ marginBottom: 15 }}>
-        <label>Código</label>
-
-        <input
-          type="text"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          style={{ width: "100%", padding: 10 }}
-        />
-      </div>
-
-      <div style={{ marginBottom: 15 }}>
-        <label>Nome</label>
-
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={{ width: "100%", padding: 10 }}
-        />
-      </div>
-
-      <div style={{ marginBottom: 20 }}>
-        <label>Tipo</label>
-
-        <select
-          value={tipo}
-          onChange={(e) => setTipo(e.target.value)}
-          style={{ width: "100%", padding: 10 }}
+   return (
+        <div
+            style={{
+                minHeight:"100vh",
+                background:"#0F1115"
+            }}
         >
-          {TIPOS.map((tipo) => (
-            <option key={tipo} value={tipo}>
-              {tipo}
-            </option>
-          ))}
-        </select>
-      </div>
 
-      <button onClick={cadastrarProduto}>
-        Cadastrar Produto
-      </button>
+            <Header
 
-    </div>
-  );
+                title="Cadastrar produtos"
+
+                onBack={()=>navigate("/")}
+
+            />
+
+        <div
+            style={{
+                width:"100%",
+                maxWidth:760,
+                margin:"0 auto",
+                padding:"20px"
+            }}
+        >
+                
+                <div style={{marginBottom:14}}>
+
+                    <Label>
+                        Código do produto
+                    </Label>
+
+                    <input
+                        style={inputStyle()}
+                        placeholder="Ex: PT-008"
+                        value={code}
+                        onChange={(e)=>setCode(e.target.value)}
+                    />
+
+                </div>
+
+                <div style={{marginBottom:14}}>
+
+                    <Label>
+                        Nome do produto
+                    </Label>
+
+                    <input
+                        style={inputStyle()}
+                        placeholder="Ex: Ômega 3"
+                        value={name}
+                        onChange={(e)=>setName(e.target.value)}
+                    />
+
+                </div>
+
+                <div style={{marginBottom:20}}>
+                    <Label>
+                        Tipo
+                    </Label>
+
+                    <select
+                        style={inputStyle()}
+                        value={tipo}
+                        onChange={(e)=>setTipo(e.target.value)}
+                    >
+
+                        {TIPOS.map((t)=>(
+                            <option
+                                key={t}
+                                value={t}
+                            >
+
+                                {t}
+
+                            </option>
+
+                        ))}
+                      
+                    </select>
+                    
+                    <button
+                        className="app-btn-primary"
+                        onClick={cadastrarProduto}
+                        style={{
+                            marginTop: 15
+                        }}
+                    >
+                        Cadastrar produto
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    );
 }

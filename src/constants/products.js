@@ -1,1 +1,11 @@
-export const TIPOS=["Proteína","Creatina","Aminoácido","Pré-Treino","Vitamina","Outro"];
+export const TIPOS = [
+  "Proteína",
+  "Creatina",
+  "Pré-Treino",
+  "Hipercalórico",
+  "Vitaminas",
+  "Aminoácidos",
+  "Termogênico",
+  "Acessórios",
+  "Outros",
+];

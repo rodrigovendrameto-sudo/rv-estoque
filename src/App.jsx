@@ -4,6 +4,7 @@ import { useAuth } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import CadastroProdutos from "./pages/CadastroProdutos";
+import Estoque from "./pages/Estoque";
 
 function ProtectedRoute({ children }) {
   const { session, loading } = useAuth();
@@ -30,6 +31,14 @@ export default function App() {
           <ProtectedRoute>
             <CadastroProdutos />
           </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/estoque"
+        element={
+            <ProtectedRoute>
+                <Estoque/>
+            </ProtectedRoute>
         }
       />
       {/* Próximas rotas a criar, espelhando as telas do protótipo:
