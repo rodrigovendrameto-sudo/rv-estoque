@@ -5,198 +5,256 @@ import Header from "../components/common/Header";
 import TableToolbar from "../components/tables/TableToolbar";
 import DataTable from "../components/tables/DataTable";
 
-import { listarProdutos } from "../services/productsService";
+import EditProductModal from "../components/products/EditProductModal";
+import ConfirmDialog from "../components/common/ConfirmDialog";
+
+import {
+  listarProdutos,
+  excluirProduto,
+} from "../services/productsService";
 
 export default function Estoque() {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [produtos, setProdutos] = useState([]);
+  const [produtos, setProdutos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
-    const [search, setSearch] = useState("");
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null);
 
-    useEffect(() => {
+  const [modalEditar, setModalEditar] = useState(false);
 
-        carregarProdutos();
+  const [modalExcluir, setModalExcluir] = useState(false);
 
-    }, []);
+  const [excluindo, setExcluindo] = useState(false);
 
-    async function carregarProdutos() {
+  useEffect(() => {
 
-        try {
+    carregarProdutos();
 
-            const data = await listarProdutos();
+  }, []);
 
-            setProdutos(data);
+  async function carregarProdutos() {
 
-        }
+    try {
 
-        catch(err){
+      setLoading(true);
 
-            console.error(err);
+      const data = await listarProdutos();
 
-        }
-
-        finally{
-
-            setLoading(false);
-
-        }
+      setProdutos(data);
 
     }
 
-    const produtosFiltrados = useMemo(()=>{
+    catch (error) {
 
-        return produtos.filter((produto)=>{
+      console.error(error);
 
-            const texto = search.toLowerCase();
+    }
 
-            return(
+    finally {
 
-                produto.name.toLowerCase().includes(texto)
+      setLoading(false);
 
-                ||
+    }
 
-                produto.code.toLowerCase().includes(texto)
+  }
 
-            );
+  function editarProduto(produto) {
 
-        });
+    setProdutoSelecionado(produto);
 
-    },[produtos,search]);
+    setModalEditar(true);
 
-    const columns=[
+  }
 
-        {
+  function abrirExcluir(produto) {
 
-            key:"code",
+    setProdutoSelecionado(produto);
 
-            label:"Código"
+    setModalExcluir(true);
 
-        },
+  }
 
-        {
+  async function confirmarExcluir() {
 
-            key:"name",
+    if (!produtoSelecionado) return;
 
-            label:"Nome"
+    try {
 
-        },
+      setExcluindo(true);
 
-        {
+      await excluirProduto(produtoSelecionado.id);
 
-            key:"tipo",
+      setModalExcluir(false);
 
-            label:"Tipo"
+      setProdutoSelecionado(null);
 
-        },
+      await carregarProdutos();
 
-        {
+    }
 
-            key:"qty",
+    catch (error) {
 
-            label:"Qtd"
+      alert(error.message);
 
-        },
+    }
 
-        {
+    finally {
 
-            key:"status",
+      setExcluindo(false);
 
-            label:"Status"
+    }
 
-        }
+  }
 
-    ];
+  const produtosFiltrados = useMemo(() => {
 
-    return(
+    const texto = search.toLowerCase();
+
+    return produtos.filter((produto) =>
+
+      produto.name.toLowerCase().includes(texto) ||
+
+      produto.code.toLowerCase().includes(texto)
+
+    );
+
+  }, [produtos, search]);
+
+  const columns = [
+
+    { key: "code", label: "Código" },
+
+    { key: "name", label: "Nome" },
+
+    { key: "tipo", label: "Tipo" },
+
+    { key: "qty", label: "Qtd" },
+
+    { key: "status", label: "Status" }
+
+  ];
+
+  return (
+
+    <>
+
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#0F1115"
+        }}
+      >
+
+        <Header
+
+          title="Consultar estoque"
+
+          onBack={() => navigate("/")}
+
+        />
 
         <div
-            style={{
-
-                minHeight:"100vh",
-
-                background:"#0F1115"
-
-            }}
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: 20
+          }}
         >
 
-            <Header
+          <TableToolbar
 
-                title="Consultar estoque"
+            search={search}
 
-                onBack={()=>navigate("/")}
+            setSearch={setSearch}
 
-            />
+            total={produtosFiltrados.length}
 
-            <div
-                style={{
+            buttonLabel="Novo Produto"
 
-                    maxWidth:1200,
+            onButtonClick={() => navigate("/produtos")}
 
-                    margin:"0 auto",
+          />
 
-                    padding:20
+          {
 
-                }}
-            >
+            loading
 
-                <TableToolbar
+              ?
 
-                    search={search}
+              <p style={{ color: "white" }}>
 
-                    setSearch={setSearch}
+                Carregando...
 
-                    total={produtosFiltrados.length}
+              </p>
 
-                    buttonLabel="Novo Produto"
+              :
 
-                    onButtonClick={()=>navigate("/produtos")}
+              <DataTable
 
-                />
+                columns={columns}
 
-                {
+                data={produtosFiltrados}
 
-                    loading
+                onEdit={editarProduto}
 
-                    ?
+                onDelete={abrirExcluir}
 
-                    <p style={{color:"white"}}>
+              />
 
-                        Carregando...
-
-                    </p>
-
-                    :
-
-                    <DataTable
-
-                        columns={columns}
-
-                        data={produtosFiltrados}
-
-                        onEdit={(produto)=>{
-
-                            console.log(produto);
-
-                        }}
-
-                        onDelete={(produto)=>{
-
-                            console.log(produto);
-
-                        }}
-
-                    />
-
-                }
-
-            </div>
+          }
 
         </div>
 
-    );
+      </div>
+
+      <EditProductModal
+
+        open={modalEditar}
+
+        product={produtoSelecionado}
+
+        onClose={() => {
+
+          setModalEditar(false);
+
+          setProdutoSelecionado(null);
+
+        }}
+
+        onSuccess={carregarProdutos}
+
+      />
+
+      <ConfirmDialog
+
+        open={modalExcluir}
+
+        title="Excluir Produto"
+
+        message={`Deseja realmente excluir "${produtoSelecionado?.name}"?`}
+
+        confirmLabel="Excluir"
+
+        loading={excluindo}
+
+        onConfirm={confirmarExcluir}
+
+        onCancel={() => {
+
+          setModalExcluir(false);
+
+          setProdutoSelecionado(null);
+
+        }}
+
+      />
+
+    </>
+
+  );
 
 }

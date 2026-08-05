@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import CadastroProdutos from "./pages/CadastroProdutos";
 import Estoque from "./pages/Estoque";
+import EntradaEstoque from "./pages/EntradaEstoque";
 
 function ProtectedRoute({ children }) {
   const { session, loading } = useAuth();
@@ -39,6 +40,14 @@ export default function App() {
             <ProtectedRoute>
                 <Estoque/>
             </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/entrada"
+        element={
+          <ProtectedRoute>
+            <EntradaEstoque />
+          </ProtectedRoute>
         }
       />
       {/* Próximas rotas a criar, espelhando as telas do protótipo:

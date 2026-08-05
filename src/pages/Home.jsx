@@ -229,6 +229,7 @@ export default function Home() {
                     title="Entrada no Estoque"
                     subtitle="Receber mercadorias"
                     icon={<ClipboardList size={22}/>}
+                    onClick={() => navigate("/entrada")}
                 />
 
                 <MenuCard
