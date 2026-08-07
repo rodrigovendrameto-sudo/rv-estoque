@@ -1,113 +1,235 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import Header from "../components/common/Header";
-import ProductForm from "../components/products/ProductForm";
-
 import { criarProduto } from "../services/productsService";
+import { useNavigate } from "react-router-dom";
+import Header from "../components/common/Header";
+import Label from "../components/ui/Label";
+import inputStyle from "../styles/inputStyle";
 
 const TIPOS = [
-  "Suplemento",
-  "Vitaminas",
-  "Acessórios",
-  "Alimentos",
-  "Outros",
+    "Suplemento",
+    "Vitaminas",
+    "Acessórios",
+    "Alimentos",
+    "Outros",
 ];
 
 export default function CadastroProdutos() {
 
-  const navigate = useNavigate();
+    const [code, setCode] = useState("");
 
-  const [code, setCode] = useState("");
-  const [name, setName] = useState("");
-  const [tipo, setTipo] = useState(TIPOS[0]);
+    const [name, setName] = useState("");
 
-  async function cadastrarProduto() {
+    const [tipo, setTipo] = useState(TIPOS[0]);
 
-    if (!code.trim() || !name.trim()) {
+    const [price, setPrice] = useState("");
 
-      alert("Preencha todos os campos.");
+    const navigate = useNavigate();
 
-      return;
+    async function cadastrarProduto() {
+
+        if (
+            !code.trim() ||
+            !name.trim() ||
+            price === ""
+        ) {
+
+            alert("Preencha todos os campos obrigatórios.");
+
+            return;
+
+        }
+
+        try {
+
+            await criarProduto({
+
+                code,
+
+                name,
+
+                tipo,
+
+                price: Number(price),
+
+                qty: 0,
+
+                min: 0
+
+            });
+
+            alert("Produto cadastrado com sucesso!");
+
+            setCode("");
+
+            setName("");
+
+            setTipo(TIPOS[0]);
+
+            setPrice("");
+
+        }
+
+        catch (error) {
+
+            alert(error.message);
+
+        }
 
     }
 
-    try {
+    return (
 
-      await criarProduto({
+        <div
+            style={{
+                minHeight: "100vh",
+                background: "#0F1115"
+            }}
+        >
 
-        code,
+            <Header
 
-        name,
+                title="Cadastrar Produtos"
 
-        tipo,
+                onBack={() => navigate("/")}
 
-        qty: 0,
+            />
 
-        min: 0,
+            <div
+                style={{
+                    width: "100%",
+                    maxWidth: 760,
+                    margin: "0 auto",
+                    padding: "20px"
+                }}
+            >
 
-      });
+                <div style={{ marginBottom: 14 }}>
 
-      alert("Produto cadastrado com sucesso!");
+                    <Label>
 
-      setCode("");
+                        Código do produto
 
-      setName("");
+                    </Label>
 
-      setTipo(TIPOS[0]);
+                    <input
 
-    } catch (error) {
+                        style={inputStyle()}
 
-      alert(error.message);
+                        placeholder="Ex: PT-008"
 
-    }
+                        value={code}
 
-  }
+                        onChange={(e) => setCode(e.target.value)}
 
-  return (
+                    />
 
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#0F1115",
-      }}
-    >
+                </div>
 
-      <Header
-        title="Cadastrar produtos"
-        onBack={() => navigate("/")}
-      />
+                <div style={{ marginBottom: 14 }}>
 
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 760,
-          margin: "0 auto",
-          padding: 20,
-        }}
-      >
+                    <Label>
 
-        <ProductForm
+                        Nome do produto
 
-          code={code}
-          setCode={setCode}
+                    </Label>
 
-          name={name}
-          setName={setName}
+                    <input
 
-          tipo={tipo}
-          setTipo={setTipo}
+                        style={inputStyle()}
 
-          onSubmit={cadastrarProduto}
+                        placeholder="Ex: Ômega 3"
 
-          buttonLabel="Cadastrar produto"
+                        value={name}
 
-        />
+                        onChange={(e) => setName(e.target.value)}
 
-      </div>
+                    />
 
-    </div>
+                </div>
 
-  );
+                <div style={{ marginBottom: 14 }}>
+
+                    <Label>
+
+                        Tipo
+
+                    </Label>
+
+                    <select
+
+                        style={inputStyle()}
+
+                        value={tipo}
+
+                        onChange={(e) => setTipo(e.target.value)}
+
+                    >
+
+                        {
+
+                            TIPOS.map((t) => (
+
+                                <option
+                                    key={t}
+                                    value={t}
+                                >
+
+                                    {t}
+
+                                </option>
+
+                            ))
+
+                        }
+
+                    </select>
+
+                </div>
+
+                <div style={{ marginBottom: 20 }}>
+
+                    <Label>
+
+                        Preço de Venda (R$)
+
+                    </Label>
+
+                    <input
+
+                        type="number"
+
+                        step="0.01"
+
+                        min="0"
+
+                        style={inputStyle()}
+
+                        placeholder="0,00"
+
+                        value={price}
+
+                        onChange={(e) => setPrice(e.target.value)}
+
+                    />
+
+                </div>
+
+                <button
+
+                    className="app-btn-primary"
+
+                    onClick={cadastrarProduto}
+
+                >
+
+                    Cadastrar Produto
+
+                </button>
+
+            </div>
+
+        </div>
+
+    );
 
 }

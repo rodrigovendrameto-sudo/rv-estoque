@@ -128,6 +128,40 @@ export async function registrarMovimentacao({
 
 /*
 |--------------------------------------------------------------------------
+| REGISTRAR SAÍDA (ATALHO PARA VENDAS)
+|--------------------------------------------------------------------------
+*/
+
+export async function registrarSaida({
+
+    productId,
+
+    quantity,
+
+    userId = null,
+
+    observation = "Venda"
+
+}) {
+
+    return registrarMovimentacao({
+
+        productId,
+
+        movementType: "SALE",
+
+        quantity,
+
+        observation,
+
+        userId
+
+    });
+
+}
+
+/*
+|--------------------------------------------------------------------------
 | LISTAR MOVIMENTAÇÕES
 |--------------------------------------------------------------------------
 */

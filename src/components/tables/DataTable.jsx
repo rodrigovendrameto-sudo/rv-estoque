@@ -1,5 +1,4 @@
 import { Pencil, Trash2 } from "lucide-react";
-import StatusBadge from "../common/StatusBadge";
 
 export default function DataTable({
   columns = [],
@@ -49,18 +48,13 @@ export default function DataTable({
 
                 <td key={column.key}>
 
-                  {column.key === "status" ? (
+                  {column.render
 
-                    <StatusBadge
-                      qty={row.qty}
-                      min={row.min}
-                    />
+                      ? column.render(row)
 
-                  ) : (
+                      : row[column.key]
 
-                    row[column.key]
-
-                  )}
+                  }
 
                 </td>
 

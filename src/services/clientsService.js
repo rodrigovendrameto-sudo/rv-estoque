@@ -2,15 +2,15 @@ import { supabase } from "../lib/supabaseClient";
 
 /*
 |--------------------------------------------------------------------------
-| LISTAR PRODUTOS
+| LISTAR CLIENTES
 |--------------------------------------------------------------------------
 */
 
-export async function listarProdutos() {
+export async function listarClientes() {
 
     const { data, error } = await supabase
 
-        .from("products")
+        .from("clients")
 
         .select("*")
 
@@ -24,15 +24,15 @@ export async function listarProdutos() {
 
 /*
 |--------------------------------------------------------------------------
-| BUSCAR PRODUTO POR ID
+| BUSCAR CLIENTE POR ID
 |--------------------------------------------------------------------------
 */
 
-export async function buscarProdutoPorId(id) {
+export async function buscarClientePorId(id) {
 
     const { data, error } = await supabase
 
-        .from("products")
+        .from("clients")
 
         .select("*")
 
@@ -48,31 +48,17 @@ export async function buscarProdutoPorId(id) {
 
 /*
 |--------------------------------------------------------------------------
-| CRIAR PRODUTO
+| CRIAR CLIENTE
 |--------------------------------------------------------------------------
 */
 
-export async function criarProduto(produto) {
+export async function criarCliente(cliente) {
 
     const { data, error } = await supabase
 
-        .from("products")
+        .from("clients")
 
-        .insert([{
-
-            code: produto.code,
-
-            name: produto.name,
-
-            tipo: produto.tipo,
-
-            price: produto.price,
-
-            qty: produto.qty,
-
-            min: produto.min
-
-        }])
+        .insert([cliente])
 
         .select()
 
@@ -86,17 +72,17 @@ export async function criarProduto(produto) {
 
 /*
 |--------------------------------------------------------------------------
-| ATUALIZAR PRODUTO
+| ATUALIZAR CLIENTE
 |--------------------------------------------------------------------------
 */
 
-export async function atualizarProduto(id, produto) {
+export async function atualizarCliente(id, cliente) {
 
-    const { id: _, ...dadosAtualizados } = produto;
+    const { id: _, ...dadosAtualizados } = cliente;
 
     const { data, error } = await supabase
 
-        .from("products")
+        .from("clients")
 
         .update(dadosAtualizados)
 
@@ -114,15 +100,47 @@ export async function atualizarProduto(id, produto) {
 
 /*
 |--------------------------------------------------------------------------
-| EXCLUIR PRODUTO
+| ATUALIZAR ÚLTIMA COMPRA
 |--------------------------------------------------------------------------
 */
 
-export async function excluirProduto(id) {
+export async function atualizarUltimaCompra(id) {
+
+    const hoje = new Date().toISOString();
+
+    const { data, error } = await supabase
+
+        .from("clients")
+
+        .update({
+
+            last_purchase: hoje
+
+        })
+
+        .eq("id", id)
+
+        .select()
+
+        .single();
+
+    if (error) throw error;
+
+    return data;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| EXCLUIR CLIENTE
+|--------------------------------------------------------------------------
+*/
+
+export async function excluirCliente(id) {
 
     const { error } = await supabase
 
-        .from("products")
+        .from("clients")
 
         .delete()
 

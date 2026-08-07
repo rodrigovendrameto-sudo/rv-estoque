@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { COLORS } from "../constants/theme";
-import Header from "../components/common/Header";
+
 
 
 import MenuCard from "../components/common/MenuCard";
@@ -236,12 +236,14 @@ export default function Home() {
                     title="Pedidos de Venda"
                     subtitle="Registrar vendas"
                     icon={<ShoppingCart size={22}/>}
+                    onClick={() => navigate("/pedidos")}
                 />
 
                 <MenuCard
                     title="Clientes"
                     subtitle="Cadastro de clientes"
                     icon={<Users size={22}/>}
+                    onClick={() => navigate("/clientes")}
                 />
 
             </div>

@@ -126,15 +126,25 @@ export default function Estoque() {
 
   const columns = [
 
-    { key: "code", label: "Código" },
+      { key: "code", label: "Código" },
 
-    { key: "name", label: "Nome" },
+      { key: "name", label: "Nome" },
 
-    { key: "tipo", label: "Tipo" },
+      { key: "tipo", label: "Tipo" },
 
-    { key: "qty", label: "Qtd" },
+      {
+          key: "price",
+          label: "Preço",
+          render: (row) =>
+              Number(row.price).toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL"
+              })
+      },
 
-    { key: "status", label: "Status" }
+      { key: "qty", label: "Qtd" },
+
+      { key: "status", label: "Status" }
 
   ];
 

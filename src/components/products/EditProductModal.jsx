@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
 
 import Modal from "../common/Modal";
-import ProductForm from "./ProductForm";
+import Label from "../ui/Label";
+import inputStyle from "../../styles/inputStyle";
 
 import { atualizarProduto } from "../../services/productsService";
+
+const TIPOS = [
+    "Suplemento",
+    "Vitaminas",
+    "Acessórios",
+    "Alimentos",
+    "Outros",
+];
 
 export default function EditProductModal({
 
@@ -15,51 +24,91 @@ export default function EditProductModal({
 
     onSuccess
 
-}){
+}) {
 
-    const [code,setCode]=useState("");
+    const [form, setForm] = useState({
 
-    const [name,setName]=useState("");
+        code: "",
 
-    const [tipo,setTipo]=useState("Suplemento");
+        name: "",
 
-    useEffect(()=>{
+        tipo: TIPOS[0],
 
-        if(product){
+        price: 0,
 
-            setCode(product.code);
+        qty: 0,
 
-            setName(product.name);
+        min: 0
 
-            setTipo(product.tipo);
+    });
+
+    const [saving, setSaving] = useState(false);
+
+    useEffect(() => {
+
+        if (product) {
+
+            setForm({
+
+                ...product
+
+            });
 
         }
 
-    },[product]);
+    }, [product]);
 
-    async function salvar(){
+    function alterarCampo(campo, valor) {
 
-        if(!code.trim() || !name.trim()){
+        setForm(old => ({
 
-            alert("Preencha todos os campos.");
+            ...old,
+
+            [campo]: valor
+
+        }));
+
+    }
+
+    async function salvar() {
+
+        if (!form.code.trim()) {
+
+            alert("Informe o código.");
 
             return;
 
         }
 
-        try{
+        if (!form.name.trim()) {
 
-            await atualizarProduto(product.id,{
+            alert("Informe o nome.");
 
-                code,
+            return;
 
-                name,
+        }
 
-                tipo
+        try {
 
-            });
+            setSaving(true);
 
-            alert("Produto atualizado com sucesso!");
+            await atualizarProduto(
+
+                form.id,
+
+                {
+
+                    ...form,
+
+                    price: Number(form.price),
+
+                    qty: Number(form.qty),
+
+                    min: Number(form.min)
+
+                }
+
+            );
 
             onSuccess();
 
@@ -67,15 +116,21 @@ export default function EditProductModal({
 
         }
 
-        catch(error){
+        catch (error) {
 
             alert(error.message);
 
         }
 
+        finally {
+
+            setSaving(false);
+
+        }
+
     }
 
-    return(
+    return (
 
         <Modal
 
@@ -85,26 +140,189 @@ export default function EditProductModal({
 
             onClose={onClose}
 
-            width={650}
-
         >
 
-            <ProductForm
+            <div style={{ marginBottom: 15 }}>
 
-                code={code}
-                setCode={setCode}
+                <Label>Código</Label>
 
-                name={name}
-                setName={setName}
+                <input
 
-                tipo={tipo}
-                setTipo={setTipo}
+                    style={inputStyle()}
 
-                onSubmit={salvar}
+                    value={form.code}
 
-                buttonLabel="Salvar alterações"
+                    onChange={(e)=>alterarCampo("code", e.target.value)}
 
-            />
+                />
+
+            </div>
+
+            <div style={{ marginBottom: 15 }}>
+
+                <Label>Nome</Label>
+
+                <input
+
+                    style={inputStyle()}
+
+                    value={form.name}
+
+                    onChange={(e)=>alterarCampo("name", e.target.value)}
+
+                />
+
+            </div>
+
+            <div style={{ marginBottom: 15 }}>
+
+                <Label>Tipo</Label>
+
+                <select
+
+                    style={inputStyle()}
+
+                    value={form.tipo}
+
+                    onChange={(e)=>alterarCampo("tipo", e.target.value)}
+
+                >
+
+                    {
+
+                        TIPOS.map(tipo=>(
+
+                            <option
+
+                                key={tipo}
+
+                                value={tipo}
+
+                            >
+
+                                {tipo}
+
+                            </option>
+
+                        ))
+
+                    }
+
+                </select>
+
+            </div>
+
+            <div style={{ marginBottom: 15 }}>
+
+                <Label>Preço de Venda (R$)</Label>
+
+                <input
+
+                    type="number"
+
+                    min="0"
+
+                    step="0.01"
+
+                    style={inputStyle()}
+
+                    value={form.price}
+
+                    onChange={(e)=>alterarCampo("price", e.target.value)}
+
+                />
+
+            </div>
+
+            <div style={{ marginBottom: 15 }}>
+
+                <Label>Quantidade</Label>
+
+                <input
+
+                    type="number"
+
+                    min="0"
+
+                    style={inputStyle()}
+
+                    value={form.qty}
+
+                    onChange={(e)=>alterarCampo("qty", e.target.value)}
+
+                />
+
+            </div>
+
+            <div style={{ marginBottom: 25 }}>
+
+                <Label>Estoque Mínimo</Label>
+
+                <input
+
+                    type="number"
+
+                    min="0"
+
+                    style={inputStyle()}
+
+                    value={form.min}
+
+                    onChange={(e)=>alterarCampo("min", e.target.value)}
+
+                />
+
+            </div>
+
+            <div
+
+                style={{
+
+                    display:"flex",
+
+                    justifyContent:"flex-end",
+
+                    gap:10
+
+                }}
+
+            >
+
+                <button
+
+                    className="app-btn-secondary"
+
+                    onClick={onClose}
+
+                >
+
+                    Cancelar
+
+                </button>
+
+                <button
+
+                    className="app-btn-primary"
+
+                    onClick={salvar}
+
+                    disabled={saving}
+
+                >
+
+                    {
+
+                        saving
+
+                            ? "Salvando..."
+
+                            : "Salvar"
+
+                    }
+
+                </button>
+
+            </div>
 
         </Modal>
 
